@@ -60,7 +60,54 @@
 }
 ```
 
-και βλέπουμε ότι για κάθε τύπο cpu δίνονται και κάποια ορίσματα που αφορούν τις Level 1 και Level 2 Caches. Στην συνέχεια εκτελείτε η εντολή
+και βλέπουμε ότι για κάθε τύπο cpu δίνονται και κάποια ορίσματα που αφορούν τις Level 1 και Level 2 Caches και πιο συγκεκριμένα μέσω του αρχείου _devices_ το οποίο έχουμε κάνει import αρχικοποιούνται οι Level 1 και Level 2 Instruction και Data Cache ως εξής:
+
+```ruby
+    class L1I(L1_ICache):
+        tag_latency = 1
+        data_latency = 1
+        response_latency = 1
+        mshrs = 4
+        tgts_per_mshr = 8
+        size = '48kB'
+        assoc = 3
+
+
+    class L1D(L1_DCache):
+        tag_latency = 2
+        data_latency = 2
+        response_latency = 1
+        mshrs = 16
+        tgts_per_mshr = 16
+        size = '32kB'
+        assoc = 2
+        write_buffers = 16
+
+
+    class WalkCache(PageTableWalkerCache):
+        tag_latency = 4
+        data_latency = 4
+        response_latency = 4
+        mshrs = 6
+        tgts_per_mshr = 8
+        size = '1kB'
+        assoc = 8
+        write_buffers = 16
+
+
+    class L2(L2Cache):
+        tag_latency = 12
+        data_latency = 12
+        response_latency = 5
+        mshrs = 32
+        tgts_per_mshr = 8
+        size = '1MB'
+        assoc = 16
+        write_buffers = 8
+        clusivity='mostly_excl'
+```
+
+Στην συνέχεια εκτελείτε η εντολή
 
 ```ruby
     args = parser.parse_args()
@@ -78,7 +125,7 @@
     root.system = create(args)
 ```
 
-η οποία καλεί την μέθοδο _create_ η οποία με την σειρά της καλεί την **SimpleSystem()** η οποία αρχικοποιεί κάποιες παραμέτρους του συστήματος όπως το μέγεθος της γραμμής της cache αλλά και την τάση και την συχνότητα λειτουργίας του ρολογιού όπως φαίνονται παρακάτω:
+η οποία καλεί την μέθοδο _create_ η οποία με την σειρά της καλεί την **SimpleSystem()** η οποία αρχικοποιεί κάποιες παραμέτρους του συστήματος όπως το μέγεθος της γραμμής της cache αλλά, την τάση και την συχνότητα λειτουργίας του συστήματος καθώς και την τάση των Caches όπως φαίνονται παρακάτω:
 
 ```ruby
     # Use a fixed cache line size of 64 bytes
@@ -88,6 +135,12 @@
     # Create a voltage and clock domain for system components
     self.voltage_domain = VoltageDomain(voltage="3.3V")
     self.clk_domain = SrcClockDomain(clock="1GHz", voltage_domain=self.voltage_domain)
+```
+
+```ruby
+    # Add CPUs to the system. A cluster of CPUs typically have
+    # private L1 caches and a shared L2 cache.
+    self.cpu_cluster = devices.CpuCluster(self, args.num_cores, args.cpu_freq, "1.2V", *cpu_types[args.cpu])
 ```
 
 Ακόμη, η μέθοδος _create_ καλεί και την μέθοδο **get_processes()** η οποία παίρνει τα cmdargs και τα μεταφράζει ώς μια λίστα από processes.
