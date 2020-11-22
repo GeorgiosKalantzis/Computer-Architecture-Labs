@@ -156,6 +156,8 @@
 | ------------- | ------------- |
 | Num. of Cores | 1             |
 | Frequency     | 4GHz          |
+| Type          | Minor         |
+| Voltage       | 1.2V          |
 
 | Caches        | L1 Instr. Cache| L1 Data Cache  | L2 Cache        |
 | ------------- | -------------  | -------------  | -------------   |
