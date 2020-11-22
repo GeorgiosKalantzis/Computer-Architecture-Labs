@@ -174,3 +174,18 @@
 | Channels      | 2             |
 | Type          | DDR3_1600_8x8 | 
 
+
+#### Ερώτημα 2
+
+Όταν τελειώνει ο gem5 το simulation, κάνει export 3 αρχεία, το **config.ini**, το **config.json** και το **stats.txt**. Το αρχείο _config.ini_ περιέχει κάθε _Simulation Object_ (SimObject) που δημιουργήθηκε και τις παραμέτρους του. Το αρχείο _config.json_ περιέχει τις ίδιες πληροφορίες απλά σε .json μορφή. Ενώ, το _stats.txt_ περιέχει τις εξόδους και τα στατιστικά του simulation.
+
+
+
+
+
+
+
+
+
+
+
