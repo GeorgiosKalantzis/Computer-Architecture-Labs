@@ -240,8 +240,7 @@ system.cpu_cluster.voltage_domain.voltage     1.200000
 ---------- Begin Simulation Statistics ----------
 ..
 system.cpu_cluster.cpus.committedInsts           5028 
-system.cpu_cluster.cpus.committedOps             5834
-system.cpu_cluster.cpus.cpi                 19.348449   
+system.cpu_cluster.cpus.committedOps             5834  
 system.cpu_cluster.cpus.discardedOps             1332 
 system.cpu_cluster.cpus.cpi                 19.348449   
 system.cpu_cluster.cpus.idleCycles              86610  
@@ -250,6 +249,7 @@ system.cpu_cluster.cpus.numCycles               97284
 ```
 
 #### Γ.
+
 
 
 
