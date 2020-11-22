@@ -147,7 +147,7 @@
 
 ### Συνοπτικά
 
-|               |  System Info  |
+|                 System Info   |
 | ------------- | ------------- |
 | Voltage       | 3.3V          |
 | Frequency     | 1GHz          |
