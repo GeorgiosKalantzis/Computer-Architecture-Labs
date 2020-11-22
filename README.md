@@ -1,7 +1,6 @@
 # Computer Architecture Lab 1
 
 ## Ομάδα 11
-
 ### Καλαντζής Γεώργιος ΑΕΜ Μειλ
 ### Κοσέογλου Σωκράτης 8837 Sokrkose@ece.auth.gr
 
