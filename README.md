@@ -143,7 +143,7 @@
     self.cpu_cluster = devices.CpuCluster(self, args.num_cores, args.cpu_freq, "1.2V", *cpu_types[args.cpu])
 ```
 
-Ακόμη, η μέθοδος _create_ καλεί και την μέθοδο **get_processes()** η οποία παίρνει τα cmdargs και τα μεταφράζει ώς μια λίστα από processes.
+Ακόμη, η μέθοδος _create_ καλεί και την μέθοδο **get_processes()** η οποία παίρνει τα cmdargs και τα μεταφράζει ώς μια λίστα από processes. Τέλος, καλούνται οι μέθοδοι **m5.instansiate()** και **m5.simulate()** οι οποίες θεμελιώνουν την ιεραρχία της C++ και ξεκινούν την προσομοίωση αντίστοιχα.
 
 ### Συνοπτικά
 
@@ -177,11 +177,43 @@
 
 #### Ερώτημα 2
 
-Όταν τελειώνει ο gem5 το simulation, κάνει export 3 αρχεία, το **config.ini**, το **config.json** και το **stats.txt**. Το αρχείο _config.ini_ περιέχει κάθε _Simulation Object_ (SimObject) που δημιουργήθηκε και τις παραμέτρους του. Το αρχείο _config.json_ περιέχει τις ίδιες πληροφορίες απλά σε .json μορφή. Ενώ, το _stats.txt_ περιέχει τις εξόδους και τα στατιστικά του simulation.
+Όταν τελειώνει ο gem5 το simulation, κάνει export 3 αρχεία, το **config.ini**, το **config.json** και το **stats.txt**. Το αρχείο _config.ini_ περιέχει κάθε _Simulation Object_ (SimObject) που δημιουργήθηκε και τις παραμέτρους του. Το αρχείο _config.json_ περιέχει τις ίδιες πληροφορίες απλά σε .json μορφή. Ενώ, το _stats.txt_ περιέχει τις εξόδους και τα στατιστικά του simulation. Ας επιβεβαιώσουμε λοιπόν με βάση τα αποτελέσματα αυτά που θεωρήσαμε στους παραπάνω πίνακες. Αρχικά, στο config.ini file μπορόυμε να δούμε την μνήμη της κάθε γραμμής της cache αλλά και τα υπόλοιπα χαρακτηριστικά των Level 1 και Level 2 Caches καθώς και την τάση λειτουργίας του συστήματος.
 
-
-
-
+```ruby
+[system]
+..
+cache_line_size=64
+..
+[system.cpu_cluster.cpus.dcache]
+..
+assoc=2
+data_latency=2
+mshrs=16
+response_latency=1
+size=32768
+tag_latency=2
+..
+[system.cpu_cluster.cpus.icache]
+assoc=3
+data_latency=1
+mshrs=4
+response_latency=1
+size=49152
+tag_latency=1
+..
+[system.cpu_cluster.l2]
+assoc=16
+data_latency=12
+mshrs=32
+response_latency=5
+size=1048576
+tag_latency=12
+..
+[system.voltage_domain]
+type=VoltageDomain
+eventq_index=0
+voltage=3.3
+```
 
 
 
