@@ -161,8 +161,14 @@
 | ------------- | -------------  | -------------  | -------------   |
 | Resp. latency | 1              | 1              | 5               |
 | Tag   latency | 1              | 2              | 12              | 
-| data  latency | 1              | 2              | 12              |
-| Assosietivity | 3              | 2              | 16              | 
+| Data  latency | 1              | 2              | 12              |
+| Associetivity | 3              | 2              | 16              | 
 | Miss Stat. Reg.| 4             | 16             | 32              |
 | Size          | 48kB           | 32kB           | 1MB             |
+
+|               | RAM Info      |
+| ------------- | ------------- |
+| Memory        | 2GB           |
+| Channels      | 2             |
+| Type          | DDR3_1600_8x8 | 
 
