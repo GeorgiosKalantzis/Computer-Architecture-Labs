@@ -215,7 +215,7 @@ eventq_index=0
 voltage=3.3
 ```
 
-Στην συνέχεια, στο **stats.txt** μπορούμε να επαληθεύσουμε την συχνότητα του συστήματος σε ticks (1 tick -> 10^(-12) sec) καθώς και την συνότητα της CPU (CPU Freq = system.clk_domain.clock / system.cpu_cluster.clk_domain.clock (GHz)). Επίσης μπορούμε να δούμε την τάση της CPU καθώς και τον χρόνο εκτέλεσης του simulation.
+Στην συνέχεια, στο **stats.txt** μπορούμε να επαληθεύσουμε την συχνότητα του συστήματος σε ticks (1 tick -> 1 picosec) καθώς και την συνότητα της CPU (Machine Cycle = 250ps). Επίσης μπορούμε να δούμε την τάση της CPU καθώς και τον χρόνο εκτέλεσης του simulation.
 
 ```ruby
 ---------- Begin Simulation Statistics ----------
@@ -224,7 +224,6 @@ host_seconds                                     0.13
 sim_freq                                 1000000000000 
 sim_ticks                                    24321000 
 ..
-system.clk_domain.clock                          1000  
 system.cpu_cluster.clk_domain.clock               250 
 ..
 system.cpu_cluster.voltage_domain.voltage     1.200000 
