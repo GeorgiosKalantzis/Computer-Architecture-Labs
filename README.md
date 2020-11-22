@@ -147,10 +147,22 @@
 
 ### Συνοπτικά
 
-|                 System Info   |
+|               | System Info   |
 | ------------- | ------------- |
 | Voltage       | 3.3V          |
 | Frequency     | 1GHz          |
 
+|               | CPU Info      |
+| ------------- | ------------- |
+| Num. of Cores | 1             |
+| Frequency     | 4GHz          |
 
+| Caches        | L1 Instr. Cache| L1 Data Cache  | L2 Cache        |
+| ------------- | -------------  | -------------  | -------------   |
+| Resp. latency | 1              | 1              | 5               |
+| Tag   latency | 1              | 2              | 12              | 
+| data  latency | 1              | 2              | 12              |
+| Assosietivity | 3              | 2              | 16              | 
+| Miss Stat. Reg.| 4             | 16             | 32              |
+| Size          | 48kB           | 32kB           | 1MB             |
 
