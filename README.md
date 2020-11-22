@@ -44,7 +44,23 @@
                         help="Specify the physical memory size")
 ```
 
-Η διαδικασία ανάθεσης των cmdargs στις μεταβλητές του script γίνεται με την μέθοδο _add_argument()_ η οποία αναθέτει το binary εκτελέσιμο _hello_ και το cpy type _minor_. Βλέπουμε επίσης, ότι τα υπόλοιπα χαρακτηρηστικά του simulator όπως _CPU Frequency_, _Number of Cores_, _Memory_Type_ κλπ εφόσον δεν δίνονται σαν cmdargs παίρνουν τις _default_ τιμές τους. Πιο συγκεκριμένα, η default συχνότητα ρολογιού είναι **4GHz**. Στην συνέχεια εκτελείτε η εντολή
+Η διαδικασία ανάθεσης των cmdargs στις μεταβλητές του script γίνεται με την μέθοδο _add_argument()_ η οποία αναθέτει το binary εκτελέσιμο _hello_ και το cpy type _minor_. Βλέπουμε επίσης, ότι τα υπόλοιπα χαρακτηρηστικά του simulator όπως _CPU Frequency_, _Number of Cores_, _Memory_Type_ κλπ εφόσον δεν δίνονται σαν cmdargs παίρνουν τις _default_ τιμές τους. Πιο συγκεκριμένα, η default συχνότητα ρολογιού είναι **4GHz**. Όσον αφορά τον τύπο της cpu βλέπουμε ότι αναθέτετε ο τύπος _minor_ μέσω των παρακάτω εντολών
+
+```ruby
+    cpu_types = {
+    "atomic" : ( AtomicSimpleCPU, None, None, None, None),
+    "minor" : (MinorCPU,
+               devices.L1I, devices.L1D,
+               devices.WalkCache,
+               devices.L2),
+    "hpi" : ( HPI.HPI,
+              HPI.HPI_ICache, HPI.HPI_DCache,
+              HPI.HPI_WalkCache,
+              HPI.HPI_L2)
+}
+```
+
+και βλέπουμε ότι για κάθε τύπο cpu δίνονται και κάποια ορίσματα που αφορούν τις Level 1 και Level 2 Caches. Στην συνέχεια εκτελείτε η εντολή
 
 ```ruby
     args = parser.parse_args()
@@ -56,5 +72,23 @@
    root = Root(full_system = False) 
 ```
 
-η οποία δηλώνει το _Excecution Mode_ του _gem5_ ως **System-Call Emulation (SE)**, δηλαδή ορίζει ότι ο gem5 δεν τρέχει ένα πλήρες λειτουργικό σύστημα, παρά μόνο το πρόγραμμα που του δίνει ο χρήστης, οπότε κάνει emulate όλα τα system calls τα οποία θα προκύψουν. Αν είχαμε δώσει σαν όρισμα στην μέθοδο _Root_ ως _full_system = True_, τότε θα λέγαμε στον gem5 ότι θα κάνει emulate ένα πλήρες λειτουργικό σύστημα, δηλαδή θα ήταν σε _Excecution Mode_ **Full-System (FS)**.
+η οποία δηλώνει το _Excecution Mode_ του _gem5_ ως **System-Call Emulation (SE)**, δηλαδή ορίζει ότι ο gem5 δεν τρέχει ένα πλήρες λειτουργικό σύστημα, παρά μόνο το πρόγραμμα που του δίνει ο χρήστης, οπότε κάνει emulate όλα τα system calls τα οποία θα προκύψουν. Αν είχαμε δώσει σαν όρισμα στην μέθοδο _Root_ ως _full_system = True_, τότε θα λέγαμε στον gem5 ότι θα κάνει emulate ένα πλήρες λειτουργικό σύστημα, δηλαδή θα ήταν σε _Excecution Mode_ **Full-System (FS)**. Στην συνέχεια, τρέχει η εντολή
+
+```ruby
+    root.system = create(args)
+```
+
+η οποία καλεί την μέθοδο _create_ η οποία με την σειρά της καλεί την **SimpleSystem()** η οποία αρχικοποιεί κάποιες παραμέτρους του συστήματος όπως το μέγεθος της γραμμής της cache αλλά και την τάση και την συχνότητα λειτουργίας του ρολογιού όπως φαίνονται παρακάτω:
+
+```ruby
+    # Use a fixed cache line size of 64 bytes
+    cache_line_size = 64
+```
+```ruby
+    # Create a voltage and clock domain for system components
+    self.voltage_domain = VoltageDomain(voltage="3.3V")
+    self.clk_domain = SrcClockDomain(clock="1GHz", voltage_domain=self.voltage_domain)
+```
+
+Ακόμη, η μέθοδος _create_ καλεί και την μέθοδο **get_processes()** η οποία παίρνει τα cmdargs και τα μεταφράζει ώς μια λίστα από processes.
 
