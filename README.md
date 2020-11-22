@@ -17,4 +17,6 @@
 
 Ας δούμε λοιπόν πίο αναλυτικά τον κώδικα του script **starter_se.py**. Αρχικά, η πρώτη εντολή που εκτελείτε είναι η εντολή
 
-`parser = argparse.ArgumentParser(epilog=__doc__)`
+```ruby
+parser = argparse.ArgumentParser(epilog=__doc__)
+```
