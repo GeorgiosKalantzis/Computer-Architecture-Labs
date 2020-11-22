@@ -264,8 +264,143 @@ system.cpu_cluster.l2.overall_accesses::total          479
 Το μοντέλο Simple CPU έχει ανανεωθεί πρόσφατα και έχει χωριστεί σε 3 κλάσεις, **BaseSimpleCPU**, **AtomicSimpleCPU** και **TimingSimpleCPU**. 
 Το BaseSimpleCPU μοντέλω εξυπηρετεί διάφορους σκοπούς όπως την εκτέλεση συναρτήσεων οι οποίες κάνουν έλεγχω για τυχόν interrupts, κάνει τα fetch requests και αναλαμβάνει και κάποιες post-excecute διεργασίες. Η κλάση BaseSimpleCPU δεν μπορεί να χρησιμοποιηθεί μόνη της καθώς χρειάζεται να κληθούν και μια από τις κλάσεις AtomicSimpleCPU ή TimingSimpleCPU οι οποίες κληρονομούν την κλάση BaseSimpleCPU. Όπως λέει και ο τίτλος το μοντέλο **AtomicSimpleCPU** χρησιμοποιεί _Atomic Memory Access_ όπου είναι μια αρκετά γρήγορη μέθοδος memory accessing, η οποία χρησιμοποιείται για fast forwarding και warming up των caches. Η κλάση AtomicSimpleCPU λοιπόν δημιουργεί ports μεταξύ μνήμης και επεξεργαστή. Η κλάση TimingSimpleCPU έχει ακριβώς την ίδια λειτουργία με την κλάση AtomicSimpleCPU (δηλαδή την διασύνδεση CPU-Cache) με μόνη διαφορά ότι χρησιμοποιεί _timing memory access_. Δηλαδή, μια μέθοδο προσπέλασης μνήμης η οποία είναι αρκετά λεπτομερής και κάνει stall τα cache accesses και περιμένει ACK (Acknowledgment) πρωτού συνεχίσει.
 
+Το μοντέλο **MinorCPU** βασίζεται σε _pipeline_. Πιο συγκεκριμένα, αρχικά, κάνει _Fetch1_ για να κάνει fetch μια γραμμή από την cache, στην συνέχεια κάνει _fetch2_ ώστε να κάνει decomposition την γραμμή αυτή που περιέχει το instruction, έπειτα κάνει _decode_ το instruction σε Micro-Ops και τέλος είναι το _Excecution Stage_ όπου το Instruction γίνεται excecute.
 
+#### A.
 
+Για το συγκεκριμένο ερώτημα αναπτύχθηκε ένας κώδικας σε _C_ ο οποίος δημιουργεί δύο 2x2 πίνακες και εκτυπώνει τα αποτελέσματα του πολλαπλασιασμού τους. Στην συνέχεια φαίνεται η υλοποίση του, την οποία θα κάνουμε simulation με διάφορα μοντέλα CPUs ώστε να παρατηρήσουμε την συμπεριφορά και την ταχύτητα εκτέλεσης.
+
+```ruby
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+void main()
+{
+
+	srand(time(0));
+
+	int A[2][2];
+	int B[2][2];
+	int C[2][2];
+
+	printf("-----------------------------------------------------------");
+	printf("\nThe input tables are: \n\n");
+
+	for(int i=0; i<2; i++){
+		for(int j=0; j<2; j++){
+			A[i][j] = rand() % 5;
+			printf("%d\t", A[i][j]);
+		}
+		printf("\n");
+	}
+
+	printf("\n");
+
+	for(int i=0; i<2; i++){
+		for(int j=0; j<2; j++){
+			B[i][j] = rand() % 5;
+			printf("%d\t", B[i][j]);
+		}
+		printf("\n");
+	}
+
+	printf("\nThe Multiplication of the tables is:\n\n");
+
+	for(int i=0; i<2; i++){
+		for(int j=0; j<2; j++){
+			C[i][j] = 0;
+			for(int k=0; k<2; k++){
+				C[i][j] += A[i][k]*B[k][j];
+			}
+		}
+	}
+
+    for(int i=0; i<2; i++){
+		for(int j=0; j<2; j++){
+			printf("%d\t", C[i][j]);
+		}
+		printf("\n");
+	}
+
+	printf("\n-----------------------------------------------------------\n");
+
+}
+```
+
+Στην συνέχεια για να μπορέσουμε να κάνουμε compile το αρχείο .c σε εκτελέσιμο που προσδιορίζεται για ARM ISA έπρεπε να τρέξουμε την παρακάτω εντολή,
+
+```ruby
+    $ arm-linux-gnueabihf-gcc --static ./tests/MatrixMultiplication.c -o ./tests/MatrixMultiplicationCompiled
+```
+
+οπότε δημιουργείται το binary εκτελέσιμο αρχείο _MatrixMultiplicationCompiled_ στο directory _./tests/_
+
+Τώρα θα τρέξουμε το πρόγραμμα αυτό με δύο διαφορετικά μοντέλα CPU του gem5, το **MinorCPU** και το **TimingSimpleCPU**.
+
+Τρέχοντας την παρακάτω εντολή εκτελούμε το script **se.py** και του δίνουμε ως ορίσματα το εκτελέσιμο του .c που δημιουργήσαμε, με το όρισμα --caches του λέμε να κάνει το simulation με **classic caches**, ορίζουμε ως CPU Model το **MinorCPU**, ορίζουμε συχνότητα ρολογιού **5GHz** και αποθηκεύουμε τα αποτελέσματα στο directory _MatrixMultiplication_MinorCPU_Results_.
+
+```ruby
+    $ ./build/ARM/gem5.opt -d my_gem5_outputs/MatrixMultiplication_MinorCPU_Results ./configs/example/se.py -c ./tests/MatrixMultiplicationCompiled --caches --cpu-type=MinorCPU --cpu-clock="5GHz"
+```
+
+Κάποια βασικά αποτελέσματα του simulation φαίνονται παρακάτω,
+
+```ruby
+final_tick                                   43108200                       # Number of ticks from beginning of simulation (restored from checkpoints and never reset)
+host_inst_rate                                  84277                       # Simulator instruction rate (inst/s)
+host_mem_usage                                 657000                       # Number of bytes of host memory used
+host_op_rate                                   100463                       # Simulator op (including micro ops) rate (op/s)
+host_seconds                                     0.42                       # Real time elapsed on the host
+host_tick_rate                              102492820                       # Simulator tick rate (ticks/s)
+sim_freq                                 1000000000000                       # Frequency of simulated ticks
+sim_insts                                       35400                       # Number of instructions simulated
+sim_ops                                         42239                       # Number of ops (including micro ops) simulated
+sim_seconds                                  0.000043                       # Number of seconds simulated
+sim_ticks                                    43108200                       # Number of ticks simulated
+system.cpu.committedInsts                       35400                       # Number of instructions committed
+system.cpu.committedOps                         42239                       # Number of ops (including micro ops) committed
+system.cpu.cpi                               6.088729                       # CPI: cycles per instruction
+system.cpu.discardedOps                          2576                       # Number of ops (including micro ops) which were discarded before commit
+system.cpu.idleCycles                          164602                       # Total number of cycles that the object has spent stopped
+system.cpu.ipc                               0.164238                       # IPC: instructions per cycle
+system.cpu.numCycles                           215541                       # number of cpu cycles simulated
+```
+
+Στην συνέχεια εκτελώντας την παρακάτω εντολή τρέχουμε ακριβώς τα ίδια αντικείμενα, απλά σε διαφορετικό μοντέλο CPU, και πιο συγκεκριμένα στο μοντέλο **TimingSimpleCPU**
+
+```ruby
+    $ ./build/ARM/gem5.opt -d my_gem5_outputs/MatrixMultiplication_TimingSimpleCPU_Results ./configs/example/se.py -c ./tests/MatrixMultiplicationCompiled --caches --cpu-type=TimingSimpleCPU --cpu-clock="5GHz"
+```
+
+Κάποια βασικά αποτελέσματα του simulation φαίνονται παρακάτω,
+
+```ruby
+---------- Begin Simulation Statistics ----------
+final_tick                                   50704000                       # Number of ticks from beginning of simulation (restored from checkpoints and never reset)
+host_inst_rate                                  90398                       # Simulator instruction rate (inst/s)
+host_mem_usage                                 655720                       # Number of bytes of host memory used
+host_op_rate                                   107366                       # Simulator op (including micro ops) rate (op/s)
+host_seconds                                     0.39                       # Real time elapsed on the host
+host_tick_rate                              129639106                       # Simulator tick rate (ticks/s)
+sim_freq                                 1000000000000                       # Frequency of simulated ticks
+sim_insts                                       35298                       # Number of instructions simulated
+sim_ops                                         41986                       # Number of ops (including micro ops) simulated
+sim_seconds                                  0.000051                       # Number of seconds simulated
+sim_ticks                                    50704000                       # Number of ticks simulated
+system.cpu.Branches                              7529                       # Number of branches fetched
+system.cpu.committedInsts                       35298                       # Number of instructions committed
+system.cpu.committedOps                         41986                       # Number of ops (including micro ops) committed
+system.cpu.idle_fraction                     0.000000                       # Percentage of idle cycles
+system.cpu.not_idle_fraction                 1.000000                       # Percentage of non-idle cycles
+system.cpu.numCycles                           253520                       # number of cpu cycles simulated
+system.cpu.numWorkItemsCompleted                    0                       # number of work items this cpu completed
+system.cpu.numWorkItemsStarted                      0                       # number of work items this cpu started
+system.cpu.num_busy_cycles               253519.995000                       # Number of busy cycles
+system.cpu.num_cc_register_reads               146533                       # number of times the CC registers were read
+system.cpu.num_cc_register_writes               21634                       # number of times the CC registers were written
+system.cpu.num_conditional_control_insts         5307                       # number of instructions that are conditional controls
+```
 
 
 
