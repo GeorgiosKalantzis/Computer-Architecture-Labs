@@ -176,7 +176,7 @@
 
 
 #### Ερώτημα 2
-
+#### A.
 Όταν τελειώνει ο gem5 το simulation, κάνει export 3 αρχεία, το **config.ini**, το **config.json** και το **stats.txt**. Το αρχείο _config.ini_ περιέχει κάθε _Simulation Object_ (SimObject) που δημιουργήθηκε και τις παραμέτρους του. Το αρχείο _config.json_ περιέχει τις ίδιες πληροφορίες απλά σε .json μορφή. Ενώ, το _stats.txt_ περιέχει τις εξόδους και τα στατιστικά του simulation. Ας επιβεβαιώσουμε λοιπόν με βάση τα αποτελέσματα αυτά που θεωρήσαμε στους παραπάνω πίνακες. Αρχικά, στο config.ini file μπορόυμε να δούμε την μνήμη της κάθε γραμμής της cache αλλά και τα υπόλοιπα χαρακτηριστικά των Level 1 και Level 2 Caches καθώς και την τάση λειτουργίας του συστήματος.
 
 ```ruby
@@ -231,8 +231,25 @@ system.cpu_cluster.voltage_domain.voltage     1.200000
 ---------- End Simulation Statistics   ----------
 ```
 
+#### B.
 
+Στην συνέχεια θα μιλήσουμε για τον θεωρητικό υπολογισμό των **committed Instructions** σε σύγκριση με τα αποτελέσματα του gem5 simulation. Αρχικά, στο συγκεκριμένο παράδειγμα χρησιμοποιείται το μοντέλο Minor CPU, το οποίο δεν βασίζεται σε threads αλλά κάνει **pipelining**. Πιο συγκεκριμένα, αρχικά, κάνει _Fetch1_ για να κάνει fetch μια γραμμή από την cache, στην συνέχεια κάνει _fetch2_ ώστε να κάνει decomposition την γραμμή αυτή που περιέχει το instruction, έπειτα κάνει _decode_ το instruction σε Micro-Ops και τέλος είναι το _Excecution Stage_ όπου το Instruction γίνεται excecute. Εφόσον λοιπόν η διαδικασία αυτή γίνεται pipelinining, θα γίνεται ένα excecution(δηλ.**committed instructions**) ανά ένα κύκλο μηχανής, εκτός από το initial interval που είναι 3 κύκλοι μηχανής. Συνεπώς, ιδανικά, μπορούμε να γνωρίζουμε τις committed instructions απλά και μόνο γνωρίζοντας την συχνότητα του ρολογιού και τον χρόνο εκτέλεσης του simulation. Στην συγκεκριμένη περίπτωση, η συχνότητα του ρολογιού είναι 4GHz, δηλαδή ο κύκλος μηχανής είναι 0.25ns και το excecution time είναι 24321us, δηλαδή 97284 κύκλοι μηχανής. Συνεπώς θα έπρεπε οι committed instructions να είναι 97284 - 3 = **97281**.
+Παρ' όλα αυτά η έξοδος του simulation μας λέει ότι πραγματοποιήθηκαν **5028** committed instructions και αυτό οφείλεται στο ότι υπήρξαν 86610 idle cycles τα οποία δημιουργούνται είτε από _misses_ των cache είτε λόγω read/write latency και έτσι το simulation εκτελεί 19.34 instructions pre cycle. Τα παραπάνω μπορούν να φανούν και στις εξής statistics:
 
+```ruby
+---------- Begin Simulation Statistics ----------
+..
+system.cpu_cluster.cpus.committedInsts           5028 
+system.cpu_cluster.cpus.committedOps             5834
+system.cpu_cluster.cpus.cpi                 19.348449   
+system.cpu_cluster.cpus.discardedOps             1332 
+system.cpu_cluster.cpus.cpi                 19.348449   
+system.cpu_cluster.cpus.idleCycles              86610  
+system.cpu_cluster.cpus.numCycles               97284   
+..
+```
+
+#### Γ.
 
 
 
