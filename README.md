@@ -144,10 +144,10 @@
 ```
 
 ```ruby
-	if self.cpu_cluster.memoryMode() == "timing":
-	self.cpu_cluster.addL1()
-	self.cpu_cluster.addL2(self.cpu_cluster.clk_domain)
-        self.cpu_cluster.connectMemSide(self.membus)
+    if self.cpu_cluster.memoryMode() == "timing":
+    self.cpu_cluster.addL1()
+    self.cpu_cluster.addL2(self.cpu_cluster.clk_domain)
+    self.cpu_cluster.connectMemSide(self.membus)
 ```
 
 Ακόμη, η μέθοδος _create_ καλεί και την μέθοδο **get_processes()** η οποία παίρνει τα cmdargs και τα μεταφράζει ώς μια λίστα από processes. Τέλος, καλούνται οι μέθοδοι **m5.instansiate()** και **m5.simulate()** οι οποίες θεμελιώνουν την ιεραρχία της C++ και ξεκινούν την προσομοίωση αντίστοιχα.
