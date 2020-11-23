@@ -194,6 +194,9 @@ cache_line_size=64
 mem_mode=timing
 mem_ranges=0:2147483648               # 2147483648 = 2 * (1024^3) = 2GB
 ..
+[system.cpu_cluster.cpus]
+type=MinorCPU
+
 [system.cpu_cluster.cpus.dcache]
 ..
 assoc=2
@@ -223,6 +226,11 @@ tag_latency=12
 type=VoltageDomain
 eventq_index=0
 voltage=3.3
+..
+[system.mem_ctrls0.dram]
+range=0:2147483648:0:128
+ranks_per_channel=2
+..
 ```
 
 Στην συνέχεια, στο **stats.txt** μπορούμε να επαληθεύσουμε την συχνότητα του συστήματος σε ticks (1 tick -> 1 picosec) καθώς και την συνότητα της CPU (Machine Cycle = 250ps). Επίσης μπορούμε να δούμε την τάση της CPU καθώς και τον χρόνο εκτέλεσης του simulation.
