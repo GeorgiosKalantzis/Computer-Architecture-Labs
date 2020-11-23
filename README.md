@@ -143,6 +143,13 @@
     self.cpu_cluster = devices.CpuCluster(self, args.num_cores, args.cpu_freq, "1.2V", *cpu_types[args.cpu])
 ```
 
+```ruby
+	if self.cpu_cluster.memoryMode() == "timing":
+	self.cpu_cluster.addL1()
+	self.cpu_cluster.addL2(self.cpu_cluster.clk_domain)
+        self.cpu_cluster.connectMemSide(self.membus)
+```
+
 Ακόμη, η μέθοδος _create_ καλεί και την μέθοδο **get_processes()** η οποία παίρνει τα cmdargs και τα μεταφράζει ώς μια λίστα από processes. Τέλος, καλούνται οι μέθοδοι **m5.instansiate()** και **m5.simulate()** οι οποίες θεμελιώνουν την ιεραρχία της C++ και ξεκινούν την προσομοίωση αντίστοιχα.
 
 ### Συνοπτικά
@@ -158,6 +165,7 @@
 | Frequency     | 4GHz          |
 | Type          | Minor         |
 | Voltage       | 1.2V          |
+| Mode          | Timing        |
 
 | Caches        | L1 Instr. Cache| L1 Data Cache  | L2 Cache        |
 | ------------- | -------------  | -------------  | -------------   |
@@ -183,6 +191,8 @@
 [system]
 ..
 cache_line_size=64
+mem_mode=timing
+mem_ranges=0:2147483648               # 2147483648 = 2 * (1024^3) = 2GB
 ..
 [system.cpu_cluster.cpus.dcache]
 ..
