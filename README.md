@@ -346,6 +346,31 @@ void main()
     $ ./build/ARM/gem5.opt -d my_gem5_outputs/MatrixMultiplication_MinorCPU_Results ./configs/example/se.py -c ./tests/MatrixMultiplicationCompiled --caches --cpu-type=MinorCPU --cpu-clock="5GHz"
 ```
 
+Η έξοδος της εντολής στο τερματικό του host machine είναι η εξής:
+
+```ruby
+**** REAL SIMULATION ****
+info: Entering event queue @ 0.  Starting simulation...
+info: Increasing stack size by one page.
+-----------------------------------------------------------
+The input tables are: 
+
+3	3	
+2	2	
+
+0	3	
+2	0	
+
+The Multiplication of the tables is:
+
+6	9	
+4	6	
+
+-----------------------------------------------------------
+Exiting @ tick 43108200 because exiting with last active thread context
+Simulated exit code not 0! Exit code is 61
+```
+
 Κάποια βασικά αποτελέσματα του simulation φαίνονται παρακάτω,
 
 ```ruby
@@ -407,7 +432,7 @@ system.cpu.num_conditional_control_insts         5307                       # nu
 
 Κατι οποίο επίσης παρατηρούμε είναι ότι παρα το γεγονός ότι τα δυο μοντέλα CPU έχουν διαφορετικούς χρόνους εκτέλεσης έχουν αρκετά παρόμοιο αριθμό **Commited Instructions** (MinorCPU -> **35400**, TimingSimpleCPU -> **35298**) κάτι το οποίο είναι λογικό καθώς εκτελούν το ίδιο πρόγραμμα, άρα ανεξάρτητα αν χρησιμοποιούν pipelining και διαφορετικές μεθόδους accessing της cahce, ο αριθμός των εντολών που πρέπει να εκτελεστούν είναι παρόμοιος.
 
-Ακόμη, παρατηρούμε ότι τα δύο μοντέλα CPU έχουν πολύ διαφορετικό αριθμό **idle clock cycles** σε σχέση με τον συνολικό αριθμό clock cycles.Πιο συγκεκριμένα, το μοντέλο TimingSimpleCPU έχει ίδιο αριθμό busy clock cycles με τα συνολικά clock cycles, δηλαδή δεν υπάρχει κύκλος μηχανής όπου δεν είναι busy και αυτό είναι λογικό καθώς όπως είπαμε πιο πάνω το συγκεκριμένο μοντέλο χρησιμοποιεί Timing Memory Access κατα την οποία περιμένει απάντησησ από την μνήμη πρωτού προχωρήσει. Αντίθετα, το μοντέλο MinorCPU έχει 164602 idle cycles.
+Ακόμη, παρατηρούμε ότι τα δύο μοντέλα CPU έχουν πολύ διαφορετικό αριθμό **idle clock cycles** σε σχέση με τον συνολικό αριθμό clock cycles.Πιο συγκεκριμένα, το μοντέλο TimingSimpleCPU έχει ίδιο αριθμό busy clock cycles με τα συνολικά clock cycles, δηλαδή δεν υπάρχει κύκλος μηχανής όπου δεν είναι busy και αυτό είναι λογικό καθώς όπως είπαμε πιο πάνω το συγκεκριμένο μοντέλο χρησιμοποιεί Timing Memory Access κατα την οποία περιμένει απάντηση από την μνήμη πρωτού προχωρήσει. Αντίθετα, το μοντέλο MinorCPU έχει 164602 idle cycles.
 
 #### Γ.
 
