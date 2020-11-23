@@ -594,6 +594,32 @@ system.cpu.numCycles                            75373                       # nu
 ..
 system.clk_domain.clock                           500                       # Clock period in ticks
 ..
+system.mem_ctrls.dram.bytes_read::.cpu.inst        36032                       # Number of bytes read from this memory
+system.mem_ctrls.dram.bytes_read::.cpu.data        12288                       # Number of bytes read from this memory
+system.mem_ctrls.dram.bytes_read::total         48320                       # Number of bytes read from this memory
+system.mem_ctrls.dram.bytes_inst_read::.cpu.inst        36032                       # Number of instructions bytes read from this memory
+system.mem_ctrls.dram.bytes_inst_read::total        36032                       # Number of instructions bytes read from this memory
+system.mem_ctrls.dram.bytes_written::.writebacks           64                       # Number of bytes written to this memory
+system.mem_ctrls.dram.bytes_written::total           64                       # Number of bytes written to this memory
+system.mem_ctrls.dram.num_reads::.cpu.inst          563                       # Number of read requests responded to by this memory
+system.mem_ctrls.dram.num_reads::.cpu.data          192                       # Number of read requests responded to by this memory
+system.mem_ctrls.dram.num_reads::total            755                       # Number of read requests responded to by this memory
+system.mem_ctrls.dram.num_writes::.writebacks            1                       # Number of write requests responded to by this memory
+system.mem_ctrls.dram.num_writes::total             1                       # Number of write requests responded to by this memory
+system.mem_ctrls.dram.bw_read::.cpu.inst    478049169                       # Total read bandwidth from this memory (bytes/s)
+system.mem_ctrls.dram.bw_read::.cpu.data    163029201                       # Total read bandwidth from this memory (bytes/s)
+system.mem_ctrls.dram.bw_read::total        641078370                       # Total read bandwidth from this memory (bytes/s)
+system.mem_ctrls.dram.bw_inst_read::.cpu.inst    478049169                       # Instruction read bandwidth from this memory (bytes/s)
+system.mem_ctrls.dram.bw_inst_read::total    478049169                       # Instruction read bandwidth from this memory (bytes/s)
+system.mem_ctrls.dram.bw_write::.writebacks       849110                       # Write bandwidth from this memory (bytes/s)
+system.mem_ctrls.dram.bw_write::total          849110                       # Write bandwidth from this memory (bytes/s)
+system.mem_ctrls.dram.bw_total::.writebacks       849110                       # Total bandwidth to/from this memory (bytes/s)
+system.mem_ctrls.dram.bw_total::.cpu.inst    478049169                       # Total bandwidth to/from this memory (bytes/s)
+system.mem_ctrls.dram.bw_total::.cpu.data    163029201                       # Total bandwidth to/from this memory (bytes/s)
+system.mem_ctrls.dram.bw_total::total       641927481                       # Total bandwidth to/from this memory (bytes/s)
+system.mem_ctrls.dram.readBursts                  658                       # Number of DRAM read bursts
+system.mem_ctrls.dram.writeBursts                 103                       # Number of DRAM write bursts
+..
 ```
 
 ```ruby
@@ -623,10 +649,28 @@ system.cpu.num_conditional_control_insts         5307                       # nu
 ..
 system.clk_domain.clock                           500                       # Clock period in ticks
 ..
+system.mem_ctrls.dram.bytes_read::.cpu.inst        21632                       # Number of bytes read from this memory
+system.mem_ctrls.dram.bytes_read::.cpu.data        11584                       # Number of bytes read from this memory
+system.mem_ctrls.dram.bytes_read::total         33216                       # Number of bytes read from this memory
+system.mem_ctrls.dram.bytes_inst_read::.cpu.inst        21632                       # Number of instructions bytes read from this memory
+system.mem_ctrls.dram.bytes_inst_read::total        21632                       # Number of instructions bytes read from this memory
+system.mem_ctrls.dram.num_reads::.cpu.inst          338                       # Number of read requests responded to by this memory
+system.mem_ctrls.dram.num_reads::.cpu.data          181                       # Number of read requests responded to by this memory
+system.mem_ctrls.dram.num_reads::total            519                       # Number of read requests responded to by this memory
+system.mem_ctrls.dram.bw_read::.cpu.inst    160530749                       # Total read bandwidth from this memory (bytes/s)
+system.mem_ctrls.dram.bw_read::.cpu.data     85964691                       # Total read bandwidth from this memory (bytes/s)
+system.mem_ctrls.dram.bw_read::total        246495440                       # Total read bandwidth from this memory (bytes/s)
+system.mem_ctrls.dram.bw_inst_read::.cpu.inst    160530749                       # Instruction read bandwidth from this memory (bytes/s)
+system.mem_ctrls.dram.bw_inst_read::total    160530749                       # Instruction read bandwidth from this memory (bytes/s)
+system.mem_ctrls.dram.bw_total::.cpu.inst    160530749                       # Total bandwidth to/from this memory (bytes/s)
+system.mem_ctrls.dram.bw_total::.cpu.data     85964691                       # Total bandwidth to/from this memory (bytes/s)
+system.mem_ctrls.dram.bw_total::total       246495440                       # Total bandwidth to/from this memory (bytes/s)
+system.mem_ctrls.dram.readBursts                  503                       # Number of DRAM read bursts
+system.mem_ctrls.dram.writeBursts                   0                       # Number of DRAM write bursts
+..
 ```
 
-
-
+Με την αλλαγή της τεχνολογίας της μνήμης μπορούμε να παρατηρήσουμε ότι ο χρόνος εκτέλεσης του MinorCPU μοντέλου μειώθηκε από **76.26us** σε **75.37us** αυτό συμβαίνει διότι παρά το γεγονός ότι το bandwidth της μνήμης αυξήθηκε το πρόγραμμα που τρέχουμε είναι εξαιρετικά απλό και τα RAM accesses είναι λίγα, οπότε η συνολική διαφορά στο συνολικό latency του προγράμματος είναι μικρή.
 
 
 
