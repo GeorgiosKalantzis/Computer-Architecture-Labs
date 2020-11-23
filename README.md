@@ -497,6 +497,70 @@ system.cpu.num_cc_register_writes               21634                       # nu
 system.cpu.num_conditional_control_insts         5307                       # number of instructions that are conditional controls
 ```
 
+Αυτό που παρατηρούμε είναι ότι, όπως είναι λογικό άλλωστε με την μείση της συχνότητας της CPU, αυξήθηκε ο συνολικός χρόνος εκτέλεσης του κάθε μοντέλου ξεχωριστά. Αυτό, όμως που αξίζει να σημειωθεί είναι ότι η μείωση της συχνότητας της CPU είχε πολύ μεγαλύτερο impact στο μοντέλο TimingSimpleCPU, εν αντιθέση με το μοντέλο MinorCPU. Πιο συγκεκριμένα, ο χρόνος εκτέλεσης του ΜinorCPU πήγε από **43.1us** σε **79.5us**, ενω του μοντέλου TimingSimpleCPU πήγε από **50.7us** σε **137.64us** κάτι το οποίο είναι πάλι λογικό λόγω της τεχνικής pipeline που χρησιμοποιεί το μοντέλο MinorCPU.
+
+Στην συνέχεια θα κρατήσουμε την συχνότητα ρολογιού της CPU στα **1GHz** αλλά θα αλλάξουμε την συχνότητα του συστήματος από 1GHz που είναι το default (τα default μπορούμε να τα δούμε στο script **Options.py**) και θα την θέσουμε στα **2GHz**. Παρακάτω, παραθέτονται τα αποτελέσματα των δυο μοντέλων, καθως και οι εντολές που τρέξαμε στο τερματικό. Πρώτα του MinorCPU και στην συνέχεια του TimingSimpleCPU.
+
+```ruby
+	$ ./build/ARM/gem5.opt -d my_gem5_outputs/MatrixMultiplication_MinorCPU_1GHz_2GHz_Results ./configs/example/se.py -c ./tests/MatrixMultiplicationCompiled --caches --cpu-type=MinorCPU --cpu-clock="1GHz" --sys-clock="2GHz"
+```
+
+```ruby
+	$ ./build/ARM/gem5.opt -d my_gem5_outputs/MatrixMultiplication_TimingSimpleCPU_1GHz_2GHz_Results ./configs/example/se.py -c ./tests/MatrixMultiplicationCompiled --caches --cpu-type=TimingSimpleCPU --cpu-clock="1GHz" --sys-clock="2GHz"
+```
+
+```ruby
+final_tick                                   76265000                       # Number of ticks from beginning of simulation (restored from checkpoints and never reset)
+host_inst_rate                                  71666                       # Simulator instruction rate (inst/s)
+host_mem_usage                                 657000                       # Number of bytes of host memory used
+host_op_rate                                    85366                       # Simulator op (including micro ops) rate (op/s)
+host_seconds                                     0.50                       # Real time elapsed on the host
+host_tick_rate                              154045488                       # Simulator tick rate (ticks/s)
+sim_freq                                 1000000000000                       # Frequency of simulated ticks
+sim_insts                                       35400                       # Number of instructions simulated
+sim_ops                                         42239                       # Number of ops (including micro ops) simulated
+sim_seconds                                  0.000076                       # Number of seconds simulated
+sim_ticks                                    76265000                       # Number of ticks simulated
+system.cpu.committedInsts                       35400                       # Number of instructions committed
+system.cpu.committedOps                         42239                       # Number of ops (including micro ops) committed
+system.cpu.cpi                               2.154379                       # CPI: cycles per instruction
+system.cpu.discardedOps                          2569                       # Number of ops (including micro ops) which were discarded before commit
+system.cpu.idleCycles                           26015                       # Total number of cycles that the object has spent stopped
+system.cpu.ipc                               0.464171                       # IPC: instructions per cycle
+system.cpu.numCycles                            76265                       # number of cpu cycles simulated
+..
+system.clk_domain.clock                           500                       # Clock period in ticks
+..
+```
+
+```ruby
+final_tick                                  134792000                       # Number of ticks from beginning of simulation (restored from checkpoints and never reset)
+host_inst_rate                                 146862                       # Simulator instruction rate (inst/s)
+host_mem_usage                                 655720                       # Number of bytes of host memory used
+host_op_rate                                   174486                       # Simulator op (including micro ops) rate (op/s)
+host_seconds                                     0.24                       # Real time elapsed on the host
+host_tick_rate                              559915510                       # Simulator tick rate (ticks/s)
+sim_freq                                 1000000000000                       # Frequency of simulated ticks
+sim_insts                                       35298                       # Number of instructions simulated
+sim_ops                                         41986                       # Number of ops (including micro ops) simulated
+sim_seconds                                  0.000135                       # Number of seconds simulated
+sim_ticks                                   134792000                       # Number of ticks simulated
+system.cpu.Branches                              7529                       # Number of branches fetched
+system.cpu.committedInsts                       35298                       # Number of instructions committed
+system.cpu.committedOps                         41986                       # Number of ops (including micro ops) committed
+system.cpu.idle_fraction                     0.000000                       # Percentage of idle cycles
+system.cpu.not_idle_fraction                 1.000000                       # Percentage of non-idle cycles
+system.cpu.numCycles                           134792                       # number of cpu cycles simulated
+system.cpu.numWorkItemsCompleted                    0                       # number of work items this cpu completed
+system.cpu.numWorkItemsStarted                      0                       # number of work items this cpu started
+system.cpu.num_busy_cycles               134791.999000                       # Number of busy cycles
+system.cpu.num_cc_register_reads               146533                       # number of times the CC registers were read
+system.cpu.num_cc_register_writes               21634                       # number of times the CC registers were written
+system.cpu.num_conditional_control_insts         5307                       # number of instructions that are conditional controls
+..
+system.clk_domain.clock                           500                       # Clock period in ticks
+..
+```
 
 
 
