@@ -267,6 +267,8 @@ system.cpu_cluster.cpus.idleCycles              86610
 system.cpu_cluster.cpus.numCycles               97284   
 ..
 ```
+<-----------Initiation Interval----------->
+
 | Cycle1        | Cycle2        | Cycle3        | Cycle4        | Cycle5        |
 | ------------- | -----------   | ------------- | ------------  | ------------- |
 | Fetch1        | Fetch2        | Decode        | Execute       |               |
