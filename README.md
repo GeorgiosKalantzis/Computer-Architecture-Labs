@@ -254,8 +254,7 @@ system.cpu_cluster.voltage_domain.voltage     1.200000
 
 #### B.
 
-Στην συνέχεια θα μιλήσουμε για τον θεωρητικό υπολογισμό των **committed Instructions** σε σύγκριση με τα αποτελέσματα του gem5 simulation. Αρχικά, στο συγκεκριμένο παράδειγμα χρησιμοποιείται το μοντέλο Minor CPU, το οποίο δεν βασίζεται σε threads αλλά κάνει **pipelining**. Πιο συγκεκριμένα, αρχικά, κάνει _Fetch1_ για να κάνει fetch μια γραμμή από την cache, στην συνέχεια κάνει _fetch2_ ώστε να κάνει decomposition την γραμμή αυτή που περιέχει το instruction, έπειτα κάνει _decode_ το instruction σε Micro-Ops και τέλος είναι το _Excecution Stage_ όπου το Instruction γίνεται excecute. Εφόσον λοιπόν η διαδικασία αυτή γίνεται pipelinining, θα γίνεται ένα excecution(δηλ.**committed instructions**) ανά ένα κύκλο μηχανής, εκτός από το initial interval που είναι 3 κύκλοι μηχανής. Συνεπώς, ιδανικά, μπορούμε να γνωρίζουμε τις committed instructions απλά και μόνο γνωρίζοντας την συχνότητα του ρολογιού και τον χρόνο εκτέλεσης του simulation. Στην συγκεκριμένη περίπτωση, η συχνότητα του ρολογιού είναι 4GHz, δηλαδή ο κύκλος μηχανής είναι 0.25ns και το excecution time είναι 24321us, δηλαδή 97284 κύκλοι μηχανής. Συνεπώς θα έπρεπε οι committed instructions να είναι 97284 - 3 = **97281**.
-Παρ' όλα αυτά η έξοδος του simulation μας λέει ότι πραγματοποιήθηκαν **5028** committed instructions και αυτό οφείλεται στο ότι υπήρξαν 86610 idle cycles τα οποία δημιουργούνται είτε από _misses_ των cache είτε λόγω read/write latency και έτσι το simulation εκτελεί 19.34 instructions pre cycle. Τα παραπάνω μπορούν να φανούν και στις εξής statistics:
+Στην συνέχεια θα μιλήσουμε για τον θεωρητικό υπολογισμό των **committed Instructions** σε σύγκριση με τα αποτελέσματα του gem5 simulation. Αρχικά, στο συγκεκριμένο παράδειγμα χρησιμοποιείται το μοντέλο Minor CPU, το οποίο δεν βασίζεται σε threads αλλά κάνει **pipelining**. Πιο συγκεκριμένα, αρχικά, κάνει _Fetch1_ για να κάνει fetch μια γραμμή από την cache, στην συνέχεια κάνει _fetch2_ ώστε να κάνει decomposition την γραμμή αυτή που περιέχει το instruction, έπειτα κάνει _decode_ το instruction σε Micro-Ops και τέλος είναι το _Excecution Stage_ όπου το Instruction γίνεται excecute. Εφόσον λοιπόν η διαδικασία αυτή γίνεται pipelinining, θα γίνεται ένα excecution(δηλ.**committed instructions**) ανά ένα κύκλο μηχανής (**CPI = 1**), εκτός από το **initial interval** που είναι 3 κύκλοι μηχανής. Συνεπώς, ιδανικά, μπορούμε να γνωρίζουμε τις committed instructions απλά και μόνο γνωρίζοντας την συχνότητα του ρολογιού και τον χρόνο εκτέλεσης του simulation. Στην συγκεκριμένη περίπτωση, η συχνότητα του ρολογιού είναι 4GHz, δηλαδή ο κύκλος μηχανής είναι 0.25ns και το excecution time είναι 24321us, δηλαδή 97284 κύκλοι μηχανής. Συνεπώς θα έπρεπε οι committed instructions να είναι 97284 - 3 = **97281**. Παρ' όλα αυτά, αυτή είναι μια ιδανική περίπτωση όπου δεν υπάρχουν **pipeline stalls**(**bubbles**), καθώς λόγω **miss latency** ή **execution latency** μπορεί, κάποιο από τα 4 στάδια του pipeline να χρειαστεί παραπάνω από ενα κύκλο ρολογιού. Κατα συνέπεια, ο αριθμός των commited instructions per cycle να καταλήξει να είναι 19.34 (**CPI=19.34**), ενω τα συνολικά commited instructions που πραγματοποιήθηκαν ήταν **5028**. Παρακάτω φαίνονται και δύο διαγράμματα που εξηγούν το pipeline αλλά και τα stalls που δημιουργούνται στην πράξη. Τα παραπάνω μπορούν να φανούν και στις εξής statistics:
 
 ```ruby
 ---------- Begin Simulation Statistics ----------
@@ -268,6 +267,12 @@ system.cpu_cluster.cpus.idleCycles              86610
 system.cpu_cluster.cpus.numCycles               97284   
 ..
 ```
+| Fetch1        | Fetch2        | Decode        | Execute       |               |
+|               | Fetch1        | Fetch2        | Decode        | Execute       |
+|               |               | Fetch1        | Fetch2        | Decode        |
+|               |               |               | Fetch1        | Fetch2        |
+|               |               |               |               | Fetch1        |
+
 
 #### Γ.
 
