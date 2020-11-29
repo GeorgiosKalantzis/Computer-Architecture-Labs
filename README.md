@@ -297,7 +297,7 @@ system.cpu_cluster.l2.overall_accesses::total          479
 
 #### Ερώτημα 3
 
-![photo](Screenshot_1.png)
+						![photo](Screenshot_1.png)
 
 Ο emulator gem5 χρησιμοποιεί διάφορα μοντέλα CPU, κάποια in-οrder και κάποια out-of-order. Τα in-order μοντέλα που χρησιμοποιεί είναι τα **Simple CPU** και **Minor CPU** models.
 
