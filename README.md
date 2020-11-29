@@ -196,6 +196,8 @@ mem_ranges=0:2147483648               # 2147483648 = 2 * (1024^3) = 2GB
 ..
 [system.cpu_cluster.cpus]
 type=MinorCPU
+numThreads=1
+..
 
 [system.cpu_cluster.cpus.dcache]
 ..
