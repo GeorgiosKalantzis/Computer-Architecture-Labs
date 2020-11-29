@@ -297,7 +297,7 @@ system.cpu_cluster.l2.overall_accesses::total          479
 
 #### Ερώτημα 3
 
-[](https://upload.wikimedia.org/wikipedia/commons/5/56/Tiger.50.jpg)
+[photo](https://upload.wikimedia.org/wikipedia/commons/5/56/Tiger.50.jpg)
 
 Ο emulator gem5 χρησιμοποιεί διάφορα μοντέλα CPU, κάποια in-οrder και κάποια out-of-order. Τα in-order μοντέλα που χρησιμοποιεί είναι τα **Simple CPU** και **Minor CPU** models.
 
