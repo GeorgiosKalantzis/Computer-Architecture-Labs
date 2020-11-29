@@ -269,18 +269,18 @@ system.cpu_cluster.cpus.numCycles               97284
 ```
 | Cycle1        | Cycle2        | Cycle3        | Cycle4        | Cycle5        |
 | ------------- | -----------   | ------------- | ------------  | ------------- |
-| Fetch1        | Fetch2        | Decode        | Execute       | ------------- |
-| ------------- | Fetch1        | Fetch2        | Decode        | Execute       |
-| ------------- | ------------- | Fetch1        | Fetch2        | Decode        |
-| ------------- | ------------- | ------------- | Fetch1        | Fetch2        |
-| ------------- | ------------- | ------------- | ------------- | Fetch1        |
+| Fetch1        | Fetch2        | Decode        | Execute       |               |
+|               | Fetch1        | Fetch2        | Decode        | Execute       |
+|               |               | Fetch1        | Fetch2        | Decode        |
+|               |               |               | Fetch1        | Fetch2        |
+|               |               |               |               | Fetch1        |
 
 | Cycle1        | Cycle2        | Cycle3        | Cycle4        | Cycle5        | Cycle6        | Cycle7        |
 | ------------- | -----------   | ------------- | ------------  | ------------- | ------------- | ------------- |
 | Fetch1        | Fetch2        | Decode        | Decode        | Decode        | Execute       |               |
-| ------------- | Fetch1        | Fetch2        | **Bubble**    | **Bubble**    | Decode        | Execute       |
-| ------------- | ------------- | Fetch1        | **Bubble**    | **Bubble**    | Fetch2        | Decode        |
-| ------------- | ------------- | ------------- | **Bubble**    | **Bubble**    | Fetch1        | Fetch2        |
+|               | Fetch1        | Fetch2        | **Bubble**    | **Bubble**    | Decode        | Execute       |
+|               |               | Fetch1        | **Bubble**    | **Bubble**    | Fetch2        | Decode        |
+|               |               |               | **Bubble**    | **Bubble**    | Fetch1        | Fetch2        |
 
 
 #### Γ.
